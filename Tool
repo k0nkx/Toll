@@ -1,0 +1,38 @@
+local KIckAnim = Instance.new('Animation')
+KIckAnim.AnimationId = "rbxassetid://3096047107"
+
+local tool = Instance.new("Tool")
+tool.RequiresHandle = false
+tool.Name = "Super Throw"
+
+tool.Activated:Connect(function()
+    local humanoid = game:GetService('Players').LocalPlayer.Character:WaitForChild('Humanoid')
+    humanoid:LoadAnimation(KIckAnim):Play()
+    wait(0.27)
+    Play(2174940386)  -- Assuming Play is a function defined elsewhere
+    game.ReplicatedStorage.MainEvent:FireServer("Grabbing")
+end)
+
+tool.Parent = game.Players.LocalPlayer.Backpack
+
+game:GetService('Players').LocalPlayer.Character:WaitForChild('FULLY_LOADED_CHAR')
+
+getgenv().POWERFLING = 400
+
+game:GetService("RunService").Heartbeat:Connect(function()
+    local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        for _, v in ipairs(humanoid:GetPlayingAnimationTracks()) do
+            if v.Animation.AnimationId == "rbxassetid://3096047107" then
+                local Vel = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector.X * getgenv().POWERFLING,
+                    0,
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector.Z * getgenv().POWERFLING
+                )
+                game:GetService("RunService").RenderStepped:Wait()
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vel
+            end
+        end
+    end
+end)
